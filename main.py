@@ -1,7 +1,7 @@
 # 포트폴리오 Risk-Return 차트 그리는 함수
 
 from pandas_datareader import data as web
-
+import plotly.express as px
 import ipywidgets as widgets
 from ipywidgets import interact
 import pandas as pd
@@ -23,7 +23,6 @@ wgt2 = 0.5
 log_Price = np.log(Price / Price.shift(1))
 log_Price = log_Price.dropna()
 log_Price.columns = ['SPY','US10Y']
-
 
 # 연평균 수익률을 구합니다.
 mean = log_Price.mean() * 252
