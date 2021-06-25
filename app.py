@@ -1,4 +1,8 @@
 # 포트폴리오 Risk-Return 차트 그리는 함수
+# 1. 백테스팅 기간을 입력합니다.
+# 2. 두 자산에 대한 wgt를 입력합니다.
+# 3. 포트폴리오에 대한 연평균 기대 수익률을 구하고 공분산을 이용하여 리스크 구하여 차트를 산출합니다.
+# 4. 기간 동안의 누적 수익률 추이를 차트로 구합니다.
 
 from pandas_datareader import data as web
 import plotly.express as px
@@ -30,7 +34,7 @@ log_Price = log_Price.dropna()
 log_Price.columns = ['SPY','GLD']
 # 연평균 수익률을 구합니다.
 mean = log_Price.mean() * 252
-# SPY 60%, 채권 40%를 가정합니다.
+# 자산1 60%, 자산2 40%를 가정합니다.
 wgt = np.array([wgt1,wgt2])
 # 포트폴리오 기대 수익률을 구합니다.
 port_return = wgt.dot(mean)
