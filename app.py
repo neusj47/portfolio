@@ -114,7 +114,7 @@ def PF_chart (start_date, end_date, wgt1, wgt2):
     log_Price.columns = ['SPY', 'GLD']
     # 연평균 수익률을 구합니다.
     mean = log_Price.mean() * 252
-    # 주식 60%, 채권 40%를 가정합니다.
+    # 자산1 60%, 자산2 40%를 가정합니다.
     wgt = np.array([wgt1, wgt2])
     # 포트폴리오 기대 수익률을 구합니다.
     port_return = wgt.dot(mean)
