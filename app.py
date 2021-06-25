@@ -24,25 +24,19 @@ start_date = '20200101' # 투자 시작일
 end_date = '20201231' # 투자 종료일
 wgt1 = 0.6
 wgt2 = 0.4
-
 # 일별 수익률을 구합니다.
 log_Price = np.log(Price / Price.shift(1))
 log_Price = log_Price.dropna()
 log_Price.columns = ['SPY','US10Y']
-
 # 연평균 수익률을 구합니다.
 mean = log_Price.mean() * 252
-
 # 주식 60%, 채권 40%를 가정합니다.
 wgt = np.array([wgt1,wgt2])
-
 # 포트폴리오 기대 수익률을 구합니다.
 port_return = wgt.dot(mean)
-
 # 포트폴리오 공분산을 구합니다.
 cov_mat = log_Price.cov() * 252
 cov_mat = cov_mat.values # 행렬구조로 저장합니다
-
 # 포트폴리오의 분산을 계산합니다.
 port_var = np.dot(np.dot(wgt, cov_mat), wgt.T)
 port_std = np.sqrt(port_var)
@@ -102,20 +96,15 @@ def PF_chart (start_date, end_date, wgt1, wgt2):
     log_Price = np.log(Price / Price.shift(1))
     log_Price = log_Price.dropna()
     log_Price.columns = ['SPY', 'US10Y']
-
     # 연평균 수익률을 구합니다.
     mean = log_Price.mean() * 252
-
     # 주식 60%, 채권 40%를 가정합니다.
     wgt = np.array([wgt1, wgt2])
-
     # 포트폴리오 기대 수익률을 구합니다.
     port_return = wgt.dot(mean)
-
     # 포트폴리오 공분산을 구합니다.
     cov_mat = log_Price.cov() * 252
     cov_mat = cov_mat.values  # 행렬구조로 저장합니다
-
     # 포트폴리오의 분산을 계산합니다.
     port_var = np.dot(np.dot(wgt, cov_mat), wgt.T)
     # port_std = np.sqrt(port_var)
@@ -125,11 +114,20 @@ def PF_chart (start_date, end_date, wgt1, wgt2):
     fig = px.scatter(data_frame=PF_chart, x='Risk', y='Return', color = 'PF')
     return fig
 
-# def port_return_cum(security_return_cum, wgt):
-#     SPY_return = (security_return_cum * [1, 0]).sum(axis=1)
-#     US10Y_return = (security_return_cum * [0, 1]).sum(axis=1)
-#     Port_return = (security_return_cum * wgt).sum(axis=1)
-#     return SPY_return, US10Y_return, Port_return
+
+def port_return_cum(start_date, end_date, wgt1, wgt2):
+    wgt = np.array([wgt1, wgt2])
+    df_SPY = web.DataReader('SPY', data_source='yahoo', start=start_date, end=end_date)
+    df_IEF = web.DataReader('IEF', data_source='yahoo', start=start_date, end=end_date)
+    Price = pd.DataFrame({'SPY': df_SPY['Close'], 'US10Y': df_IEF['Close']})
+
+    log_Price = np.log(Price / Price.shift(1))
+    log_Price = log_Price.dropna()
+    log_Price.columns = ['SPY', 'US10Y']
+
+    log_Rtn_cum = (1 + log_Price).cumprod() - 1
+
+    return log_Rtn_cum
 
 
 
